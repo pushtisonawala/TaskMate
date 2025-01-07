@@ -29,8 +29,6 @@ export const authOptions = {
         email: { label: "Email", type: "email" },
       },
       async authorize(credentials) {
-        // Here you can add your own logic to find the user and validate the credentials
-        // For example, you can use the email to find the user in your database
         const user = { id: 1, name: "User", email: credentials.email };
         if (user) {
           return user;
@@ -40,7 +38,7 @@ export const authOptions = {
       },
     }),
   ],
-  adminEmails: ['pushtisonawala786@gmail.com'], // Verify this is your exact email
+  adminEmails: ['pushtisonawala786@gmail.com'],
   pages: {
     signIn: "/",
     signOut: "/",
@@ -48,12 +46,13 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user }) {
+      console.log('User signed in:', user);
       return true;
     },
     async jwt({ token, user }) {
       if (user) {
         token.role = authOptions.adminEmails.includes(user.email) ? 'admin' : 'user';
-        console.log('User role set to:', token.role); // Add this for debugging
+        console.log('User role set to:', token.role);
       }
       return token;
     },
@@ -64,7 +63,7 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl, token }) {
-      if (url.startsWith(baseUrl)) {
+      if (url && url.startsWith(baseUrl)) {
         if (token?.role === 'admin') {
           return `${baseUrl}/admin`;
         }

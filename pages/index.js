@@ -1,19 +1,20 @@
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import OtpComponent from "../components/OtpComponent";
 
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
+  const [otpVerified, setOtpVerified] = useState(false);
 
   useEffect(() => {
-    if (session) {
+    if (session && otpVerified) {
       router.push("/tasks");
     }
-  }, [session, router]);
+  }, [session, otpVerified, router]);
 
-  if (session) {
+  if (session && otpVerified) {
     return <div className="text-center text-lg font-semibold text-gray-300">Redirecting to tasks...</div>;
   }
 
@@ -34,7 +35,7 @@ export default function Home() {
           <span className="mr-2">🔒</span> Sign in with Google
         </button>
 
-        <OtpComponent />
+        <OtpComponent onOtpVerified={() => setOtpVerified(true)} />
       </div>
     </div>
   );

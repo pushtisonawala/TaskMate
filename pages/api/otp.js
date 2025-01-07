@@ -2,7 +2,7 @@ import sendgrid from "@sendgrid/mail";
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
-const otpStore = new Map(); // Better to use Map instead of plain object
+const otpStore = new Map();
 
 export default async (req, res) => {
   if (req.method !== 'POST') {
@@ -33,7 +33,7 @@ export default async (req, res) => {
             html: `<h1>Your OTP Code</h1><p>Your OTP code is: <strong>${generatedOtp}</strong></p>`
           });
 
-          console.log(`OTP sent to ${email}: ${generatedOtp}`); // For debugging
+          console.log(`OTP sent to ${email}: ${generatedOtp}`);
           return res.status(200).json({ success: true, message: "OTP sent successfully" });
         } catch (sendError) {
           console.error(`Error sending OTP to ${email}:`, sendError);
@@ -47,14 +47,13 @@ export default async (req, res) => {
           return res.status(400).json({ success: false, message: "No OTP found for this email" });
         }
 
-        // Check if OTP has expired (5 minutes)
         if (Date.now() - storedData.timestamp > 5 * 60 * 1000) {
           otpStore.delete(email);
           return res.status(400).json({ success: false, message: "OTP has expired" });
         }
 
         if (storedData.otp === otp) {
-          otpStore.delete(email); // Clear OTP after successful verification
+          otpStore.delete(email);
           return res.status(200).json({ success: true, message: "OTP verified successfully" });
         } else {
           return res.status(400).json({ success: false, message: "Invalid OTP" });
