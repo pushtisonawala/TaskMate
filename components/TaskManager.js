@@ -26,6 +26,7 @@ export default function TaskManager() {
           'Content-Type': 'application/json',
         }
       });
+      console.log("Fetched tasks:", res.data);
       setTasks(res.data);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);

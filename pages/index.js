@@ -9,6 +9,8 @@ export default function Home() {
   const [otpVerified, setOtpVerified] = useState(false);
 
   useEffect(() => {
+    console.log("Session:", session);
+    console.log("OTP Verified:", otpVerified);
     if (session && otpVerified) {
       router.push("/tasks");
     }

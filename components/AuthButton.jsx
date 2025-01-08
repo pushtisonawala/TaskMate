@@ -7,12 +7,12 @@ const AuthButton = () => {
 
   const handleSignIn = async () => {
     await signIn("google", {
-      callbackUrl: "/tasks",
+      callbackUrl: `${process.env.NEXTAUTH_URL}/tasks`,
     });
   };
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" });
+    await signOut({ callbackUrl: process.env.NEXTAUTH_URL });
   };
 
   return session ? (
